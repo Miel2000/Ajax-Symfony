@@ -2,13 +2,13 @@
     dans nos entités :
          avec la CLI on link l'entité via PostLike à Post et User avec un make:entity , dans chacune on accepte d'y mettre une variable $likes et $likes, resultat :
 
-        Combien de likes à UN user 
+ 
             $user->getLikes() 
-        Combien de likes à UN post
+    
             $post->getLikes()
-        combien de USER ont été like
+
             $likes->getUser()  
-        combien de POST ont été like 
+  
             $likes->getPost() 
         
 
