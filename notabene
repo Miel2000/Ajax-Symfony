@@ -12,7 +12,7 @@
             $likes->getPost() 
         
 
-ensuite on fait un algo dans Post.php pour verifier si le poste est déjà liké par l'utilisateur connecté.
+ensuite on fait une fonction dans Post.php pour verifier si le poste est déjà liké par l'utilisateur connecté.
 On lui demande de renvoyer une variable true or false pour s'appuyer dessus
 
     voir fichier->
@@ -32,13 +32,13 @@ On lui demande de renvoyer une variable true or false pour s'appuyer dessus
     -- Si le post est déjà liké --
 
 2.       
-    on vérifi si le post est déjà liké. On utilise ici la fonction crée dans mon entité Post, on l'appel en faisant $post->isLikedByUser($user) (on lui file en parametre le user)
+    on vérifi si le post est déjà liké. On utilise ici la fonction crée dans mon entité Post, on l'appel en faisant $post->isLikedByUser($user) (on lui file en parametre le user qu'il connait grace a l'injection de dépendance dans les parametres de sa function parente ( ici : like())
     2.1 
          dans la condition, on utilise le repo pour findOneBy() et là on lui passe un tableau associatif avec le post et l'utilisateur 
     2.2  
-        on utilise l'ObjectManager pour remove($like) et on return un tableau avec le code 200, le message (et le nombre de like sur un post postController l.56)
+        on utilise l'ObjectManager pour remove($like) et on return un tableau avec le code 200, le message (et le nombre de like, pas necessairement, juste pour s'aider ici)
 
-3. Si le poste n'est pas encore liké (on sort simplement de notre condition) On initie l'entité new PostLike();
+3. Si le poste n'est pas encore liké (on sort simplement de notre condition, pour se retrouver dans le code global propre à la public function like()) On initie l'entité new PostLike();
     on utilise les setter pour ajouté un like dans l'entité PostLike() avec setPost($post) et setUser($user)
     et on utilise l'object manager pour persist et enfin flush();
 
