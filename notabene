@@ -1,0 +1,56 @@
+// on fait le back qui prepare une url avec un fichier json
+    dans nos entités :
+         avec la CLI on link l'entité via PostLike à Post et User avec un make:entity , dans chacune on accepte d'y mettre une variable $likes et $likes, resultat :
+
+        Combien de likes à UN user 
+            $user->getLikes() 
+        Combien de likes à UN post
+            $post->getLikes()
+        combien de USER ont été like
+            $likes->getUser()  
+        combien de POST ont été like 
+            $likes->getPost() 
+        
+
+ensuite on fait un algo dans Post.php pour verifier si le poste est déjà liké par l'utilisateur connecté.
+On lui demande de renvoyer une variable true or false pour s'appuyer dessus
+
+    voir fichier->
+                    Entity\Post.php:
+                        isLikedByUser(User $user): bool 
+
+
+0.
+   Ensuite, dans PostController.php on fabrique une route dans le controller, on l'appel /* @Route(/post/{id}/like), (peu importe, du moment qu'on lui refile l'id enfaite).
+   à la suite de la route, dans les paramètres de la public function like() on appel l'entité post, le manager et le repo de PostLikeRepository et on peut direct $user = $this->getUser(); il ira pécho le bon {id} grace à l'url routé.
+
+   -- une fois la route crée avec le bon id souhaité --
+
+1.  
+    on vérifie si user n'existe pas, on return $this->json (et pas $this->render() justement, la subtilité est ici, on va renvoyer un json) Dans le json on fou un peu ce qu'on veut, là on a mit un tableau associatif avec un code et un message. suivi d'un status http genre 403,200, ici c'est 404 
+
+    -- Si le post est déjà liké --
+
+2.       
+    on vérifi si le post est déjà liké. On utilise ici la fonction crée dans mon entité Post, on l'appel en faisant $post->isLikedByUser($user) (on lui file en parametre le user)
+    2.1 
+         dans la condition, on utilise le repo pour findOneBy() et là on lui passe un tableau associatif avec le post et l'utilisateur 
+    2.2  
+        on utilise l'ObjectManager pour remove($like) et on return un tableau avec le code 200, le message (et le nombre de like sur un post postController l.56)
+
+3. Si le poste n'est pas encore liké (on sort simplement de notre condition) On initie l'entité new PostLike();
+    on utilise les setter pour ajouté un like dans l'entité PostLike() avec setPost($post) et setUser($user)
+    et on utilise l'object manager pour persist et enfin flush();
+
+    ensuite on return $this->json([
+        'code' => 200,
+        'message' => 'ca marche'
+        'likes' => $likeRepo->count(['post' => $post])
+    ],200)
+
+
+
+
+
+// on arrive sur la page, on utilise javascript pour pécho les objets du DOM et commencer un appel ajax, 
+    on need une url de réponse envoyé par symfony, contenant un dossier json avec mon status de réponse, mon message et mon nombre de likes 
